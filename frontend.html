@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Title</title>
+
+  <style>
+    .main-block {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      min-height: 100vh;
+    }
+    .menu-block {
+      display: flex;
+      align-items: center;
+    }
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+    }
+    @media (max-width: 575px) {
+      .menu-block {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+</head>
+
+<body>
+    <div class="main-block">
+      <div class="menu-block">
+        <button onClick="scrollFirst()">Первая</button>
+
+        <label for="menu-input" style="display: none"></label>
+        <input type="text" id="menu-input" style="flex: 1;">
+
+        <button onClick="scrollById()">Перейти</button>
+        <button onClick="scrollLast()">Последняя</button>
+      </div>
+    </div>
+    <div class="content">
+        <ul id="content" style="list-style-type: none;"></ul>
+    </div>
+
+<script>
+  class Storage {
+    constructor() {
+      this.items = [];
+    }
+
+    init(length) {
+      length = (length < 500) ? 500 : length;
+
+      for (let i = 0; i < length; i++) {
+        this.items.push(Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7));
+      }
+
+      setTimeout(() => {
+        let list = document.getElementById("content");
+        this.items.forEach((item, key) => {
+          let li = document.createElement("li");
+          li.setAttribute("id", "li_" + key);
+          li.innerText = item;
+          list.appendChild(li);
+        });
+      }, 1000);
+    }
+
+    get() {
+      return this.items;
+    }
+  }
+
+  const storage = new Storage();
+  let length = 200;
+
+  storage.init(length);
+
+  function scrollFirst() {
+    $(document).ready(function(){
+      var id = $( "li" ).first();
+      scroll(id);
+    });
+  }
+
+  function scrollLast() {
+    $(document).ready(function(){
+      var id = $( "li" ).last();
+      scroll(id);
+    });
+  }
+
+  function scrollById() {
+    $(document).ready(function(){
+      var id = $("#menu-input").val();
+      var target = $('#li_' + id);
+      scroll(target);
+    });
+  }
+
+  function scroll(target) {
+    $('html, body').animate({
+      scrollTop: target.offset().top - 20
+    }, 500)
+  }
+</script>
+</body>
+</html>
